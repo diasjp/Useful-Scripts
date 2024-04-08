@@ -1,0 +1,11 @@
+var grSDS = new GlideRecord('sys_data_source');
+if (grSDS.get('1437817eeb9bba007a9e0dffab887ef1')) {
+
+    gs.info(grSDS.getUniqueValue());
+
+  var ecas_util = new global.EcasGlobalUtils();
+    var value = ecas_util.getDecryptedValue(grSDS.jdbc_password);
+    gs.info("Value: " + value);
+
+
+}
