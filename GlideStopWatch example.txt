@@ -1,0 +1,25 @@
+Background Script run by: guest on app128028.gva201.service-now.com:rochetesttemp2001
+gs.info('Start UTC: ' + new GlideDateTime());
+var sw = new GlideStopWatch();
+
+
+var gag = new GlideAggregate("sys_audit")
+// gag.addEncodedQuery("tablename=pm_project");
+gag.addTrend("sys_created_on", "year");
+gag.addAggregate("COUNT");
+gag.groupBy("tablename");
+gag.groupBy("fieldname");
+gag.query()
+
+// CSV header
+gs.info('year;tablename;count;query');
+while (gag.next()) {
+  gs.info("cs;{0};{1};{2};{3};{4}", [
+    gag.getValue("timeref"),
+    gag.getValue("tablename"),
+    gag.getValue("fieldname"),
+    gag.getAggregate("COUNT"),
+    gag.getQuery(),
+  ])
+}
+gs.info('Finish UTC:' + new GlideDateTime() + ' after ' + sw);
