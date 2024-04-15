@@ -1,0 +1,34 @@
+REM Created by Christian Steinbrecher
+REM I have a bash script for URL Export processor. because that's usually less locked down
+REM curl headers come from browser developer tools -> network trace -> copy as curl
+REM 2nd reason I used it: output is closer to manual Excel Exports from list view (which I often used as Pivot basis)
+
+
+for i in $(seq -f %02g 01 21); do
+myinstance=roche
+mydate='2024-01-'$i
+myfile='syslog_transaction_'$mydate
+
+
+url='https://'$myinstance'.service-now.com/syslog_transaction_list.do?XLS&sysparm_query=sys_created_onBETWEENjavascript:gs.dateGenerate(%27'$mydate'%27%2C%2700:00:00%27)@javascript:gs.dateGenerate(%27'$mydate'%27%2C%2723:59:59%27)%5EurlSTARTSWITH%2Fpm_project.do&sysparm_first_row=1&sysparm_view='
+
+echo '---'
+echo $myfile
+echo $url
+# echo $myinstance
+curl $url \
+  -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7' \
+  -H 'Accept-Language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'Connection: keep-alive' \
+  -H 'Cookie: _ga=GA1.2.779479219.1636627219; _ga=GA1.3.779479219.1636627219; iv=3d97bff7-5bd5-40e6-9941-8c44ac64db68; s_lv=1677776481829; AMCV_2A2A138653C66CB60A490D45%40AdobeOrg=-330454231%7CMCIDTS%7C19573%7CMCMID%7C28021037421247025653177341064793649219%7CMCAAMLH-1691657855%7C6%7CMCAAMB-1691657855%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1691060255s%7CNONE%7CMCAID%7CNONE%7CvVersion%7C3.1.2; _gcl_au=1.1.256587182.1700672437; BIGipServerpool_roche=264b17267daca7cf9a620e81a0162ce5; glide_user_route=glide.30c3b0c5ed9f1e8469ad3097e05415c3; JSESSIONID=3E6384A636BAD0ED3D060C2FD109AA2D; glide_user_activity=U0N2M18xOkxuTlEyWVFwUTRnV0RVYVIySGZzc0I3TW9RTFdSNjBCU3poS1FEVTcva1E9Om8zSTk4ZGQ5VHRtYnpBRDI0UHBsbEpMZ0phM1RIREl5bmRDdjFJZE9la1U9; glide_session_store=9133ADCF87BB7918337C32A90CBB35C5; __CJ_tabs2_list_sys_user=%220%22; __CJ_g_startTime=%221705915535639%22' \
+  -H 'Referer: https://roche.service-now.com/now/nav/ui/classic/params/target/syslog_transaction_list.do%3Fsysparm_userpref_module%3Da7c7aa56c0a80164019476470cd7f062%26sysparm_query%3Dsys_created_onONToday%2540javascript%253Ags.daysAgoStart%25280%2529%2540javascript%253Ags.daysAgoEnd%25280%2529%255EurlSTARTSWITH%252F%255EEQ%26%26sysparm_query_category%3Dlog%26sysparm_order%3Dsys_created_on%26sysparm_order_direction%3Ddesc%26sysparm_filter_only%3Dtrue' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: navigate' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'Upgrade-Insecure-Requests: 1' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -o $myfile'.xls'
+done
